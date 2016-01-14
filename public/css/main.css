@@ -1,0 +1,191 @@
+
+@media only screen and (max-width: 800px) {
+	.main-content{
+		margin: auto;
+		min-width: 400px;
+
+	}
+	.tab-content{
+		width: 100%;
+	}
+
+	h3 {
+    	font-size: 12px;
+	}
+
+	.nav-tabs.nav-justified>li {
+	    float: left;
+	    font-size: 5px;
+	    width: 31.33%;
+	}
+
+	.file-content{
+	    padding: 10;
+	}
+
+	.file-content div {
+	    font-size: 5px;
+	    padding: 0;
+	}
+
+	#add-file-button{
+		display: none;
+	}
+
+	.column_icon{
+		width: 15%;
+	}
+
+	.version_txt{
+		width: 15%;
+	}
+
+	.version{
+		width: 30%;
+	}
+
+	.create_time{
+		width: 30%;
+	}
+
+	.download_icon{
+		width: 10%;
+	}
+
+	.intro, .delete_icon{
+		display: none;
+	}
+
+	.column_icon, .delete_icon, .download_icon{
+		cursor: pointer;
+		margin-top: 2px
+	}
+
+	#upload-content{
+		display: none;
+	}
+
+}
+
+@media only screen and (min-width: 800px) {
+	.main-content{
+		/*min-width: 800px;*/
+		max-width: 72%;
+		margin: auto;
+	}
+
+	.nav-tabs.nav-justified>li {
+	    width: 30%;
+	}
+
+	.file-content div{
+		line-height: 50px;
+		white-space: nowrap;
+	}
+
+	.column_icon, .delete_icon, .download_icon{
+		cursor: pointer;
+		margin-top: 12px
+	}
+
+}
+
+.nav-tabs.nav-justified>.active>a, 
+.nav-tabs.nav-justified>.active>a:hover, 
+.nav-tabs.nav-justified>.active>a:focus {
+    background-color: #ddd;
+}
+
+.tab-content{
+	border-width: 0px 1px 1px 1px;
+    border-style: solid;
+    border-color: #ddd;
+    height: 40%;
+    overflow-y: auto;
+}
+
+.btn{
+	min-width: 100px;
+}
+
+.file-content:nth-child(odd){
+	background-color: #ddd; 
+}
+
+#add-file-button{
+	position: relative;
+	top: 20px;
+}
+
+#upload-content{
+	position: relative;
+	/*border: 1px solid #ddd;*/
+}
+
+.input-field{
+	margin-top: 20px;
+}
+
+.input-field textarea{
+	resize: none;
+	height: 150px;
+}
+
+.btn-upload{
+	margin: 35 30;
+}
+
+.file-input{
+	position: relative;
+    overflow: hidden;
+    display: inline-block;
+    width: 100%;
+    background: #ECECEC;
+    font-weight: bold;
+    font-size: 18px;
+    color: #4066B3;
+    text-align: left;
+}
+
+.file-input:hover{
+    color: #768FC3;
+}
+.file-input input{
+	position: absolute;
+	top: 0;
+	right: 0;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.file_name{
+    color: #3C3333;
+    float: right;
+    margin: 5px;
+    font-size: 12px;
+}
+
+.intro{
+	text-align: center;
+}
+
+div.frame { 
+    background-color: #FBFAFA;
+    width: 360px;
+    height: 10px;
+    border-radius: 5px;
+    margin: 1vh auto;
+    position: relative;
+}
+div.frame .progress {
+    background: #7ABDF8;
+    height: 15px;
+}
+
+div.frame .text {
+    position: absolute;
+    top: -3px;
+    left: 163px;
+    color: white;
+    text-shadow: 0px 0px 10px white;
+}

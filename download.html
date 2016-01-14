@@ -1,0 +1,117 @@
+<html ng-app="fileDownload">
+	<head>
+		<title>File Uploading Form</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+		<link href="/css/main.css" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.js"></script>
+		<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
+		<script src="/js/app.js"></script>
+	</head>
+	<body ng-controller="FileCtrl">
+		<div class="main-content">
+			<h3>檔案下載</h3>
+
+			<uib-tabset justified="true">
+				<uib-tab>
+					<uib-tab-heading>
+						<i class="fa fa-android fa-2x" style="color:green"></i>
+						<label><h4>Android</h4></label>
+					</uib-tab-heading>
+				
+					<div class="file-content col-xs-12" 
+						ng-repeat="file in android_list | orderBy:'-create_time'">
+						<div class="col-xs-1 column_icon">
+							<i class="fa fa-columns fa-2x"></i>
+						</div>
+						<div class="col-xs-1 version_txt">
+							版本號
+						</div>
+						<div class="col-xs-2 version">
+							{{file.version}}
+						</div>
+						<div class="col-xs-2 create_time">
+							{{file.create_time}}
+						</div>
+						<div class="col-xs-5 intro">
+							{{file.intro}}
+						</div>
+						<div class="col-xs-1 download_icon">
+							<span ng-click="downloadFile(file.download_url)">
+								<i class="fa fa-download fa-2x"></i>
+							</span>
+							<!-- <button class="btn btn-primary" 
+								ng-click="downloadFile(file.download_url)">下載
+							</button> -->
+						</div>
+					</div>
+				</uib-tab>
+			    <uib-tab>
+			    	<uib-tab-heading>
+						<i class="fa fa-apple fa-2x" style="color:grey"></i>
+						<label><h4>IOS</h4></label>
+					</uib-tab-heading>
+			    	<div class="file-content col-xs-12" 
+			    		ng-repeat="file in ios_list | orderBy:'-create_time'">
+						<div class="col-xs-1 column_icon">
+							<i class="fa fa-columns fa-2x"></i>
+						</div>
+						<div class="col-xs-1 version_txt">
+							版本號
+						</div>
+						<div class="col-xs-2 version">
+							{{file.version}}
+						</div>
+						<div class="col-xs-2 create_time">
+							{{file.create_time}}
+						</div>
+						<div class="col-xs-5 intro">
+							{{file.intro}}
+						</div>
+						<div class="col-xs-1 download_icon">
+							<span ng-click="downloadFile(file.plist_url)">
+								<i class="fa fa-download fa-2x"></i>
+							</span>
+						</div>
+					</div>
+			    </uib-tab>
+			    <uib-tab>
+			    	<uib-tab-heading>
+						<i class="fa fa-desktop fa-2x" style="color:black"></i>
+						<label><h4>Web</h4></label>
+					</uib-tab-heading>
+			    	<div class="file-content col-xs-12" 
+			    		ng-repeat="file in web_list | orderBy:'-create_time'">
+						<div class="col-xs-1 column_icon">
+							<i class="fa fa-columns fa-2x"></i>
+						</div>
+						<div class="col-xs-1 version_txt">
+							版本號
+						</div>
+						<div class="col-xs-2 version">
+							{{file.version}}
+						</div>
+						<div class="col-xs-2 create_time">
+							{{file.create_time}}
+						</div>
+						<div class="col-xs-5 intro">
+							{{file.intro}}
+						</div>
+						<div class="col-xs-1 download_icon">
+							<span ng-click="downloadFile(file.download_url)">
+								<i class="fa fa-download fa-2x"></i>
+							</span>
+							<!-- <button class="btn btn-primary" 
+								ng-click="downloadFile(file.download_url)">下載
+							</button> -->
+						</div>
+					</div>
+			    </uib-tab>
+			</uib-tabset>
+		</div>
+
+		
+	</body>
+</html>

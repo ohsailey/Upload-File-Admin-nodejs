@@ -1,0 +1,238 @@
+<html ng-app="fileDownload">
+	<head>
+		<title>File Uploading Form</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+		
+		<link href="/css/main.css" rel="stylesheet">
+		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.js"></script>
+		<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
+		<script src="/js/app.js"></script>
+		<script src="/js/jquery.js"></script>
+	</head>
+	<body ng-controller="FileCtrl">
+		<div class="main-content">
+			<h3>檔案上傳</h3>
+			<uib-tabset justified="true">
+				<uib-tab select="switchTab('android')">
+					<uib-tab-heading>
+						<i class="fa fa-android fa-2x" style="color:green"></i>
+						<label><h4>Android</h4></label>
+					</uib-tab-heading>
+
+					<div class="file-content col-xs-12" 
+						ng-repeat="file in android_list | orderBy:'-create_time'">
+						<div class="col-xs-1 column_icon">
+							<i class="fa fa-columns fa-2x"></i>
+						</div>
+						<div class="col-xs-1 version_txt">
+							版本號
+						</div>
+						<div class="col-xs-2 version">
+							{{file.version}}
+						</div>
+						<div class="col-xs-2 create_time">
+							{{file.create_time}}
+						</div>
+						<div class="col-xs-4 intro">
+							{{file.intro}}
+						</div>
+						<div class="col-xs-1 download_icon">
+							<span ng-click="downloadFile(file.download_url)">
+								<i class="fa fa-download fa-2x"></i>
+							</span>
+							<!-- <button class="btn btn-primary" 
+								ng-click="downloadFile(file.download_url)">下載
+							</button> -->
+						</div>
+						<!-- <div class="col-xs-2" id="{{file.version}}">
+							<button class="btn btn-warning"
+								ng-click="editFile(file)">編輯
+							</button>
+						</div> -->
+						<div class="col-xs-1 delete_icon">
+							<span ng-click="deleteFile(file.id, 'apk')">
+								<i class="fa fa-trash-o fa-2x"></i>
+							</span>
+							<!-- <button class="btn btn-danger"
+								ng-click="deleteFile('android', file.version, 'apk')">刪除
+							</button> -->
+						</div>
+					</div>
+					
+					
+				</uib-tab>
+			    <uib-tab select="switchTab('ios')">
+			    	<uib-tab-heading>
+						<i class="fa fa-apple fa-2x"></i>
+						<label><h4>IOS</h4></label>
+					</uib-tab-heading>
+
+			    	<div class="file-content col-xs-12" 
+			    		ng-repeat="file in ios_list | orderBy:'-create_time'">
+						<div class="col-xs-1 column_icon">
+							<i class="fa fa-columns fa-2x"></i>
+						</div>
+						<div class="col-xs-1 version_txt">
+							版本號
+						</div>
+						<div class="col-xs-2 version">
+							{{file.version}}
+						</div>
+						<div class="col-xs-2 create_time">
+							{{file.create_time}}
+						</div>
+						<div class="col-xs-4 intro">
+							{{file.intro}}
+						</div>
+						<div class="col-xs-1 download_icon">
+							<span ng-click="downloadFile(file.download_url)">
+								<i class="fa fa-download fa-2x"></i>
+							</span>
+							<!-- <button class="btn btn-primary" 
+								ng-click="downloadFile(file.download_url)">下載
+							</button> -->
+						</div>
+						<!-- <div class="col-xs-2" id="{{file.version}}">
+							<button class="btn btn-warning"
+								ng-click="editFile(file)">編輯
+							</button>
+						</div> -->
+						<div class="col-xs-1 delete_icon">
+							<span ng-click="deleteFile(file.id, 'ipa')">
+								<i class="fa fa-trash-o fa-2x"></i>
+							</span>
+							<!-- <button class="btn btn-danger"
+								ng-click="deleteFile('android', file.version, 'apk')">刪除
+							</button> -->
+						</div>
+					</div>
+			    </uib-tab>
+			    <uib-tab select="switchTab('web')">
+			    	<uib-tab-heading>
+						<i class="fa fa-desktop fa-2x"></i>
+						<label><h4>Web</h4></label>
+					</uib-tab-heading>
+			    	<div class="file-content col-xs-12" 
+			    		ng-repeat="file in web_list | orderBy:'-create_time'">
+						<div class="col-xs-1 column_icon">
+							<i class="fa fa-columns fa-2x"></i>
+						</div>
+						<div class="col-xs-1 version_txt">
+							版本號
+						</div>
+						<div class="col-xs-2 version">
+							{{file.version}}
+						</div>
+						<div class="col-xs-2 create_time">
+							{{file.create_time}}
+						</div>
+						<div class="col-xs-4 intro">
+							{{file.intro}}
+						</div>
+						<div class="col-xs-1 download_icon">
+							<span ng-click="downloadFile(file.download_url)">
+								<i class="fa fa-download fa-2x"></i>
+							</span>
+							<!-- <button class="btn btn-primary" 
+								ng-click="downloadFile(file.download_url)">下載
+							</button> -->
+						</div>
+						<!-- <div class="col-xs-2" id="{{file.version}}">
+							<button class="btn btn-warning"
+								ng-click="editFile(file)">編輯
+							</button>
+						</div> -->
+						<div class="col-xs-1 delete_icon">
+							<span ng-click="deleteFile(file.id, 'exe')">
+								<i class="fa fa-trash-o fa-2x"></i>
+							</span>
+						</div>
+					</div>
+			    </uib-tab>
+			</uib-tabset>
+
+			<!-- <span id="add-file-button" class="btn-success btn" ng-show="upload_status"
+				ng-click="showUploadForm()" >
+				<i class="glypchicon glyphicon-plus"></i>
+				<span>新增檔案</span> 
+			</span> -->
+			<div id="upload-content">
+				<form name="uploadForm"> 
+					<div class="col-xs-12 input-field">
+						<!-- <label class="col-xs-2 control-label">版本號碼</label> -->
+						<div class="col-xs-3">
+							<input type="text" class="form-control" ng-model="upload.version" placeholder="版本號碼" required/>
+						</div>
+					</div>
+					<div class="col-xs-12 input-field">
+						<div class="col-xs-3">
+							<input type="text" class="form-control" ng-model="upload.intro" placeholder="簡介"/>
+						</div>
+					</div>
+					
+					<!-- <div class="col-xs-12 input-field">
+						<div class="col-xs-6">
+							<select class="form-control" ng-model="upload.type"
+								ng-change="updateUploadType()"/>
+								<option value="android">Android</option>
+								<option value="ios">IOS</option>
+								<option value="web">web</option>
+							</select>
+						</div>
+					</div> -->
+					<div class="col-xs-12 input-field">
+						<div class="col-xs-3">
+						<span class="btn file-input">
+							<span>{{input_file_hint}}</span>
+								<input type="file" class="form-control" 	file-model="upload.file" onchange="angular.element(this).scope().changeUploadFile(this)" accept="{{accept_format}}" required/>
+							<span class='file_name'>{{file_name}}</span>
+						</span>
+						</div>
+					</div>
+
+					<!-- <div ng-show="choose_ios">
+						<div class="col-xs-12 input-field">
+							<label class="col-xs-2 control-label">選擇plist檔案</label>
+							<div class="col-xs-6">
+								<input type="file" class="form-control" file-model="upload.plist_file"/>
+							</div>
+						</div>
+
+						<div class="col-xs-12 input-field ios-file">
+							<label class="col-xs-2 control-label">選擇ipa檔案</label>
+							<div class="col-xs-6">
+								<input type="file" class="form-control" file-model="upload.ipa_file"/>
+							</div>
+						</div>
+					</div>
+					 -->
+
+					<!-- <div class="col-sm-8">
+						<uib-progressbar value="progress_num">{{progress_num}}%</uib-progressbar>
+					</div> -->
+					<!-- <span class="btn-primary btn file-input-button" >
+						<i class="glypchicon glyphicon-plus"></i>
+						<span>choose a file</span> 
+						<input type="file" name="uploadFile" file-model="upload.file"/>
+					</span>
+					<br> -->
+					<button class="btn-primary btn btn-upload" 
+						ng-click="uploadSubmit(uploadForm.$valid, $event)">
+						上傳
+					</button>
+
+					<section class="progress-bar" ng-show="progressVisible">
+		        		<div class="frame">
+			        		<div class="progress"></div>
+			        		<div class="text">0%</div>
+		        		</div>
+		        	</section>
+					
+				</form>
+			</div>
+		</div>		
+	</body>
+</html>
