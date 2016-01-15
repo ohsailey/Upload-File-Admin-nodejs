@@ -75,7 +75,7 @@ app.controller('FileCtrl', function ($scope, $http, $timeout, $window, fileUploa
 
 	$scope.purpose = 'add';
 
-	$http.get("/file_list").success(function(data){
+	$http.get("/qmifiles/file_list").success(function(data){
 		$scope.android_list = data.android;
 		$scope.ios_list = data.ios;
 		$scope.web_list = data.web;
@@ -106,7 +106,7 @@ app.controller('FileCtrl', function ($scope, $http, $timeout, $window, fileUploa
     		'file_type': file_type
     	};
 
-    	$http.delete("/file_delete", {params: req_body}).success(function(data) {
+    	$http.delete("/qmifiles/file_delete", {params: req_body}).success(function(data) {
 			console.log("success!!");
 			window.location.reload();
 		}).error(function(){
@@ -187,7 +187,7 @@ app.controller('FileCtrl', function ($scope, $http, $timeout, $window, fileUploa
 		xhr.upload.addEventListener("progress", uploadProgress, false);
 		xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
-		xhr.open("POST", "/upload");
+		xhr.open("POST", "/qmifiles/upload");
 		$scope.progressVisible = true;
 		xhr.send(fd);
     }

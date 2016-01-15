@@ -11,23 +11,22 @@ var mime = require('mime');
 
 var bodyParser = require('body-parser');
 var multer  = require('multer');
-var upload = multer({ dest: '/uploads/' });
+var upload = multer({ dest: __dirname + '/uploads/' });
 
-var db_file = "./test.db";
+var db_file = "./sqlite.db";
 var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database(db_file);
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(multer({ dest: '/uploads/'}).single('file'));
+app.use(multer({ dest: __dirname + '/uploads/'}).single('file'));
 
 app.get('/', function (req, res) {
    res.sendFile( __dirname + "/" + "download.html" );
 })
 
-db.serialize(function() {
-	//如果 UploadFile 資料表不存在，那就建立 UploadFile 資料表
-	db.run("CREATE TABLE IF NOT EXISTS  UploadFile(file_id TEXT, file_type TEXT, version TEXT, date TEXT, intro TEXT, download_url TEXT)");
+db.serialize(function(){
+    db.run("CREATE TABLE IF NOT EXISTS  UploadFile(file_id TEXT, file_type TEXT, version TEXT, date TEXT, intro TEXT, download_url TEXT)");
 });
 
 app.get('/file_list', function (req, res) {
@@ -54,7 +53,7 @@ app.get('/file_list', function (req, res) {
 						 		'intro': row.intro,
 						 		'download_url': row.download_url,
 						 		'plist_url': "itms-services://?action=download-manifest&" + 
-						 			"url=https://apserver.mitake.com.tw/plist/" +
+						 			"url=https://eimweb.mitake.com.tw/qmifiles/plist/" +
 						 			row.file_id + ".plist"
 						 	});
 				 		}
@@ -91,7 +90,7 @@ app.post('/upload', function(req, res, next){
 		generatePlist(file_id);
 	}
 
-	var path = __dirname + "/file_storage/" + req.body.type + '/' + file_id + file_format;
+	var path = __dirname + "/public/file_storage/" + req.body.type + '/' + file_id + file_format;
 
 	fs.readFile( req.file.path, function (err, data) {
         fs.writeFile(path, data, function (err) {
@@ -109,13 +108,14 @@ app.post('/upload', function(req, res, next){
     });
 });
 
+
 var handleDB = function(data, file_format){
 	var file_id = md5(data.body.version);
 	var file_type = data.body.type;
 	var version = data.body.version;
 	var date = parseIsoTime();
 	var intro = data.body.intro;
-	var download_url = "/file_download?download_type=" + file_type +
+	var download_url = "/qmifiles/file_download?download_type=" + file_type +
     		"&file_id=" + file_id + "&file_type=" + file_format.slice(1);
 
     var inspect_sql = "SELECT * FROM UploadFile WHERE version='" + 
@@ -137,16 +137,15 @@ var handleDB = function(data, file_format){
 };
 
 var generatePlist = function(file_id){
-	console.log('sadasions');
-
-	var plist_path = __dirname + "/public/plist/" + file_id + ".plist";
+        var plist_path = __dirname + "/public/plist/" + file_id + ".plist";
+	var ipa_path = "https://eimweb.mitake.com.tw/qmifiles/file_storage/ios/" + file_id + ".ipa";
 	var plist_data = plist.build({ 
 		items: [
 			{
 				assets: [
 					{
 						kind: "software-package",
-						url: plist_path
+						url: ipa_path
 					}
 				],
 				metadata:{
@@ -169,15 +168,13 @@ var generatePlist = function(file_id){
 
 };
 
-
-
 app.get('/file_download', function(req, res){
 
 	var type = req.query.download_type;
 	var file_name = req.query.file_id;
 	var format = req.query.file_type;
 
-  	var file = __dirname + '/file_storage/' + type + '/' + file_name + '.' + format;
+  	var file = __dirname + '/public/file_storage/' + type + '/' + file_name + '.' + format;
 
   	var filename = path.basename(file);
 	var mimetype = mime.lookup(file);
@@ -213,7 +210,7 @@ app.delete('/file_delete', function(req, res){
 	var file_name = req.query.file_id;
 	var format = req.query.file_type;
 
-  	var file_path = __dirname + '/file_storage/' + type + '/' + file_name + '.' + format;
+  	var file_path = __dirname + '/public/file_storage/' + type + '/' + file_name + '.' + format;
 	fs.unlinkSync(file_path);
 
 	if(type == 'ios'){
@@ -225,7 +222,7 @@ app.delete('/file_delete', function(req, res){
 	res.send("刪除成功");
 });
 
-var server = app.listen(8081, function () {
+var server = app.listen(3010, function () {
 
   	var host = server.address().address;
   	var port = server.address().port;
@@ -233,46 +230,6 @@ var server = app.listen(8081, function () {
   	console.log("Example app listening at http://%s:%s", host, port);
 
 })
-
-// var scanDirectory = function(type){
-
-// 	var scan_path = __dirname + '/file_storage/';
-
-// 	var files = fs.readdirSync(scan_path + type);
-
-// 	var file_data = [];
-
-// 	for(var i in files){
-// 		var stats = fs.statSync(scan_path + type + '/' + files[i]);
-// 		var create_time = new Date(stats['mtime']);
-// 		var year = create_time.getFullYear().toString();
-// 		var month = (create_time.getMonth()+1).toString();
-// 		var date = create_time.getDate().toString();
-// 		var hour = create_time.getHours().toString();
-// 		var minute = create_time.getMinutes().toString();
-// 		// fs.stat(scan_path + type + '/' + files[i], function(err, stats) {
-// 		file_data.push({
-// 			'version' : files[i].slice(0, -4),
-// 			'create_time' : year + '-' + month + '-' + date + " " + hour + ":" + minute
-// 		});
-// 	}
-
-// 	return file_data;
-// }
-
-// var storeDB = function(file_id, data, file_format){
-// 	var file_type = data.body.type;
-// 	var version = data.body.version;
-// 	var date = parseIsoTime();
-// 	var intro = data.body.intro;
-// 	var download_url = "/file_download?download_type=" + file_type +
-//     		"&file_id=" + version + "&file_type=" + file_format.slice(1);
-
-// 	var upload_sql = "INSERT INTO UploadFile(file_id, file_type, version, date, intro, download_url) VALUES (?,?,?,?,?,?)";
-// 	db.run(upload_sql,[file_id, file_type, version, date, intro, download_url]);
-// }
-
-
 
 var deleteRow = function(type, id){
 
