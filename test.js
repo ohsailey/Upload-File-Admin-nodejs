@@ -26,7 +26,7 @@ app.get('/', function (req, res) {
 })
 
 db.serialize(function(){
-    db.run("CREATE TABLE IF NOT EXISTS  UploadFile(file_id TEXT, file_type TEXT, version TEXT, date TEXT, intro TEXT, download_url TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS UploadFile(file_id TEXT, file_type TEXT, env TEXT, version TEXT, date TEXT, intro TEXT, download_url TEXT)");
 });
 
 app.get('/file_list', function (req, res) {
@@ -48,12 +48,13 @@ app.get('/file_list', function (req, res) {
 				 			files[key].push({
 				 				'id': row.file_id,
 				 				'platform': row.file_type,
+				 				'env': row.env,
 					 			'version': row.version,
 						 		'create_time': row.date,
 						 		'intro': row.intro,
 						 		'download_url': row.download_url,
 						 		'plist_url': "itms-services://?action=download-manifest&" + 
-						 			"url=https://eimweb.mitake.com.tw/qmifiles/plist/" +
+						 			"url=https://eimweb.mitake.com.tw/plist/" +
 						 			row.file_id + ".plist"
 						 	});
 				 		}
@@ -108,20 +109,20 @@ app.post('/upload', function(req, res, next){
     });
 });
 
-
 var handleDB = function(data, file_format){
 	var file_id = md5(data.body.version);
 	var file_type = data.body.type;
+	var env = data.body.env;
 	var version = data.body.version;
 	var date = parseIsoTime();
 	var intro = data.body.intro;
-	var download_url = "/qmifiles/file_download?download_type=" + file_type +
+	var download_url = "/file_download?download_type=" + file_type +
     		"&file_id=" + file_id + "&file_type=" + file_format.slice(1);
 
     var inspect_sql = "SELECT * FROM UploadFile WHERE version='" + 
     	version + "' AND file_type='" + file_type + "'";
 
-    var upload_sql = "INSERT INTO UploadFile(file_id, file_type, version, date, intro, download_url) VALUES (?,?,?,?,?,?)";
+    var upload_sql = "INSERT INTO UploadFile(file_id, file_type, env, version, date, intro, download_url) VALUES (?,?,?,?,?,?,?)";
 
 	db.get(inspect_sql, function(err, row) {
 	    if (row !== undefined) {
@@ -131,14 +132,14 @@ var handleDB = function(data, file_format){
 					console.log(error);
 			});
 		}
-		db.run(upload_sql,[file_id, file_type, version, date, intro, download_url]);
+		db.run(upload_sql,[file_id, file_type, env, version, date, intro, download_url]);
 	});
 
 };
 
 var generatePlist = function(file_id){
         var plist_path = __dirname + "/public/plist/" + file_id + ".plist";
-	var ipa_path = "https://eimweb.mitake.com.tw/qmifiles/file_storage/ios/" + file_id + ".ipa";
+	var ipa_path = "https://eimweb.mitake.com.tw/file_storage/ios/" + file_id + ".ipa";
 	var plist_data = plist.build({ 
 		items: [
 			{

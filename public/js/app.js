@@ -27,11 +27,6 @@ app.service('fileUpload', ['$http', function($http){
 			fd.append(key, data[key]);
 		}
 		fd.append('type', platform);
-		// if(data['type'] == 'ios'){
-		// 	fd.append("file[]", data["ipa_file"]);
-		// }
-
-		console.log(fd);
 		
 		var url = '/upload';
 		$http.post(url, fd, {
@@ -68,14 +63,13 @@ app.service('fileUpload', ['$http', function($http){
 app.controller('FileCtrl', function ($scope, $http, $timeout, $window, fileUpload) {
 
 	$scope.upload = {};
-	$scope.upload_form_status = false;
-	$scope.upload_status = true;
-
+    $scope.predicate = 'create_time';
+    $scope.reverse = true;
+    $scope.format_err = false;
 	$scope.progressVisible = false;
-
 	$scope.purpose = 'add';
 
-	$http.get("/qmifiles/file_list").success(function(data){
+	$http.get("/file_list").success(function(data){
 		$scope.android_list = data.android;
 		$scope.ios_list = data.ios;
 		$scope.web_list = data.web;
@@ -106,7 +100,7 @@ app.controller('FileCtrl', function ($scope, $http, $timeout, $window, fileUploa
     		'file_type': file_type
     	};
 
-    	$http.delete("/qmifiles/file_delete", {params: req_body}).success(function(data) {
+    	$http.delete("/file_delete", {params: req_body}).success(function(data) {
 			console.log("success!!");
 			window.location.reload();
 		}).error(function(){
@@ -114,25 +108,23 @@ app.controller('FileCtrl', function ($scope, $http, $timeout, $window, fileUploa
 	    });
     }
 
-    $scope.showUploadForm = function(){
-    	$scope.upload_form_status = true;
-    	$scope.upload_status = false;
-    	$scope.purpose = 'add';
-    	$scope.upload = {};
+    $scope.checkFormat = function(e){
+        var regExp = /\d{1}.\d{1}.\d{1}.\d{1}/;
+
+        if(($scope.upload.version).search(regExp) == -1){
+            $scope.format_err = true;
+        }else{
+            $scope.format_err = false;
+        }
+
     }
 
-    $scope.cancelUpload = function(){
-    	$scope.upload_form_status = false;
-    	$scope.upload_status = true;
-    }
+    $scope.order = function(predicate){
 
-    $scope.updateUploadType = function(){
-    	if($scope.upload.type == "ios"){
-    		$scope.choose_ios = true;
-    	}else{
-    		$scope.choose_ios = false;
-    	}
-    	
+        $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
+        $scope.predicate = predicate;
+        console.log($scope.reverse);
+        console.log($scope.predicate);
     }
 
     $scope.uploadSubmit = function(isFormValid, $event){
@@ -187,7 +179,7 @@ app.controller('FileCtrl', function ($scope, $http, $timeout, $window, fileUploa
 		xhr.upload.addEventListener("progress", uploadProgress, false);
 		xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
-		xhr.open("POST", "/qmifiles/upload");
+		xhr.open("POST", "/upload");
 		$scope.progressVisible = true;
 		xhr.send(fd);
     }

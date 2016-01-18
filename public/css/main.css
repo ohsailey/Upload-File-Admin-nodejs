@@ -2,9 +2,7 @@
 @media only screen and (max-width: 800px) {
 	.main-content{
 		margin: auto;
-                width: 100%;
-		//min-width: 400px;
-
+        width: 100%;
 	}
 	.tab-content{
 		width: 100%;
@@ -16,7 +14,7 @@
 
 	.nav-tabs.nav-justified>li {
 	    float: left;
-	    font-size: 5px;
+	    font-size: 7px;
 	    width: 31.33%;
 	}
 
@@ -29,33 +27,17 @@
 	    padding: 0;
 	}
 
-	#add-file-button{
-		display: none;
-	}
-
-	.column_icon{
-		width: 15%;
-	}
-
-	.version_txt{
-		width: 15%;
-	}
-
-	.version{
-		width: 30%;
-	}
-
-	.create_time{
-		width: 30%;
-	}
-
-	.download_icon{
-		width: 10%;
-                text-align: center;
+	
+	td, th{
+		font-size: 12px;
 	}
 
 	.intro, .delete_icon{
 		display: none;
+	}
+
+	tr th:nth-child(4){
+		display: none
 	}
 
 	.column_icon, .delete_icon, .download_icon{
@@ -99,7 +81,7 @@
 }
 
 .tab-content{
-	border-width: 0px 1px 1px 1px;
+	border-width: 1px 1px 1px 1px;
     border-style: solid;
     border-color: #ddd;
     height: 40%;
@@ -110,8 +92,8 @@
 	min-width: 100px;
 }
 
-.file-content:nth-child(odd){
-	background-color: #ddd; 
+label{
+	margin-bottom: 0;
 }
 
 #add-file-button{
@@ -171,6 +153,27 @@
 	text-align: center;
 }
 
+td, th{
+	padding: 13 16;
+	font-size: 14px;
+	white-space: nowrap;
+}
+
+tr.file-list:nth-child(even){
+	background: #ddd;
+}
+
+
+.download_icon{
+	text-align: right;
+}
+
+.error{
+	float: right;
+	color: red;
+}
+
+
 div.frame { 
     background-color: #FBFAFA;
     width: 360px;
@@ -191,3 +194,12 @@ div.frame .text {
     color: white;
     text-shadow: 0px 0px 10px white;
 }
+
+.sortorder:after {
+  content: '\25b2';
+}
+.sortorder.reverse:after {
+  content: '\25bc';
+}
+
+
